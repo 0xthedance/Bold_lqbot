@@ -18,9 +18,10 @@ bot = SilverbackBot()
 
 network_constants = load_network_constants()
 
+collateral = 1
 
 liquity = LiquityMethods(
-    1,
+    collateral,
     network_constants["TROVE_MANAGER"],
     network_constants["MULTI_TROVE_GETTER"],
     network_constants["BORROWER_OPERATIONS"],
@@ -75,7 +76,7 @@ def add_new_trove(trove_operation_log: ContractLog, liquity) -> None:
     trove = liquity.get_trove_details(trove_id)
     if trove == 0:
         return
-    if trove.check():
+    if trove.check(liquity.coll_index):
         liquity.liquidate(trove.trove_id)
     else:
         update_trove(trove)

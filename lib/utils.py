@@ -6,7 +6,6 @@ from ape.exceptions import ContractLogicError
 
 from lib.constants import (
     ACCOUNT_ALIAS,
-    ETH_USD_PRICE_FEED,
     DEFAULT_PRIORITY_FEE,
     NETWORK_CONFIG,
 )
@@ -36,16 +35,17 @@ def activate_flashbot() -> bool:
     return load_network_constants()["FLASHBOT"]
 
 
-def get_eth_price() -> float:
+def get_eth_price(coll_index) -> float:
     """Fetch ETH price in a smart contract Oracle"""
-    decimals = 10**8
+    decimals = 10**18
     network_name = networks.provider.network.name
     if network_name == "mainnet":
-        # with networks.parse_network_choice("ethereum:mainnet:alchemy") as provider:
-        contract = Contract(ETH_USD_PRICE_FEED)
+        COLL_USD_PRICE_FEED = NETWORK_CONFIG[network_name]["COLL_USD_PRICE_FEED"][coll_index]
+        contract = Contract(COLL_USD_PRICE_FEED)
         try:
-            eth_price = contract.latestRoundData()
-            return eth_price.answer / decimals
+            eth_price = contract.fetchPrice.call()
+            print(eth_price[0], "eth_price")
+            return eth_price[0] / decimals
         except ContractLogicError as err:
             logger.error("Cannot fetch eth price due this error %s", err)
             return -1

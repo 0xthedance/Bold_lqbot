@@ -48,8 +48,8 @@ class LiquidationBot:
         """select the troves to be liquidated from a batch of troves"""
         selected = []
         for trove in trove_list:
-            if not trove.check():
-                logger.debug(trove.check())
+            if not trove.check(self.liquity.coll_index):
+                logger.debug(trove.check(self.liquity.coll_index))  
                 break
             selected.append(trove)
         logger.info("troves with CR below the minimum:%s", selected)

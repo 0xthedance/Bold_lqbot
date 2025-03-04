@@ -4,7 +4,6 @@ from ape.exceptions import ContractLogicError, OutOfGasError
 from ape import Contract
 
 from lib.utils import estimate_gas_price, account, activate_flashbot
-from lib.constants import MIN_CLR
 
 from lib.trove import Trove
 from lib.trove_db import eliminate_from_db
@@ -50,6 +49,8 @@ class LiquityMethods:
     def batch_liquidate_troves(self, trove_ids):
         """Call trove manager contract to liquidate a batch of trove_ids"""
         logger.info("   %s", trove_ids)
+        logger.debug("   %s", self.trove_manager)
+        logger.debug("   %s", activate_flashbot)
 
         try:
             self.trove_manager.batchLiquidateTroves(

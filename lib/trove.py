@@ -1,7 +1,7 @@
 import logging
 
 from lib.utils import get_eth_price
-from lib.constants import MIN_CLR
+from lib.constants import MIN_CR
 
 
 logger = logging.getLogger("my_logger")
@@ -29,12 +29,12 @@ class Trove:
             and (self.debt == other_test_class.debt)
         )
 
-    def check(self) -> bool:
+    def check(self, coll_index) -> bool:
         """Funtion to check if CR is below the threshold"""
         if self.debt == 0:
             return False
 
-        eth_price = get_eth_price()
+        eth_price = get_eth_price(coll_index)
         logger.info("eth price: %s", eth_price)
 
         if eth_price < 0:
@@ -43,7 +43,7 @@ class Trove:
         coll_ratio = (self.coll * eth_price) / (self.debt)
         logger.info("price %s{} CR %s", eth_price, coll_ratio)
 
-        return coll_ratio < MIN_CLR
+        return coll_ratio < MIN_CR[coll_index]
 
     def estimate_compensation(self) -> float:
         """returns trove liquidation compensation in ETH"""

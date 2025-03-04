@@ -1,6 +1,6 @@
 import os
 
-
+# collateral: ETH, Lido ETH (wstETH) and Rocket Pool ETH (rETH).
 NETWORK_CONFIG = {
     "mainnet": {
         "TROVE_MANAGER": [
@@ -17,6 +17,11 @@ NETWORK_CONFIG = {
             "0x0B995602B5a797823f92027E8b40c0F2D97Aff1C",
             "0x94C1610a7373919BD9Cfb09Ded19894601f4a1be",
             "0xA351d5B9cDa9Eb518727c3CEFF02208915fda60d",
+        ],
+        "COLL_USD_PRICE_FEED": [
+            "0x3279e2B49ff60dAFb276FBAFF847383B67a7ec2d", 
+            "0x4c275608887ad2eB049d9006E6852BC3ee8A00Fa",
+            "0x93d3a2234e67C2aD494735cd6676fb4b79a6De97",
         ],
         "FLASHBOT": True,
     },
@@ -41,14 +46,10 @@ NETWORK_CONFIG = {
 }
 
 
-# Chainlink address for ETH/USD price feed
-ETH_USD_PRICE_FEED = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419"
-
-MIN_CLR = 1.10
-
 # Recipient of liquidation rewards
 ACCOUNT_ALIAS = os.environ["ACCOUNT_ALIAS"]
 
+MIN_CR = [1.10, 1.20, 1.20]
 
 # About 2M gas required to liquidate 10 Troves (much of it is refunded though).
 MAX_TROVES_TO_LIQUIDATE = 4
