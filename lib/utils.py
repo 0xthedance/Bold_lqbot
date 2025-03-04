@@ -19,7 +19,7 @@ logger = logging.getLogger("my_logger")
 def load_network_constants() -> dict:
     network_name = networks.provider.network.name
     print("net:", network_name)
-    if not network_name in NETWORK_CONFIG:
+    if network_name not in NETWORK_CONFIG:
         raise ValueError(f"Network not supported: {network_name}")
 
     network_constants = {
@@ -40,7 +40,9 @@ def get_eth_price(coll_index) -> float:
     decimals = 10**18
     network_name = networks.provider.network.name
     if network_name == "mainnet":
-        COLL_USD_PRICE_FEED = NETWORK_CONFIG[network_name]["COLL_USD_PRICE_FEED"][coll_index]
+        COLL_USD_PRICE_FEED = NETWORK_CONFIG[network_name]["COLL_USD_PRICE_FEED"][
+            coll_index
+        ]
         contract = Contract(COLL_USD_PRICE_FEED)
         try:
             eth_price = contract.fetchPrice.call()

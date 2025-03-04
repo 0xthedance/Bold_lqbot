@@ -34,7 +34,7 @@ logger = configure_logging()
 async def update_list_troves(LQTY_bot):
     print("updating list of troves")
 
-    await update_db(LQTY_bot)
+    await update_db(LQTY_bot, coll_index=collateral)
 
 
 @bot.on_startup()
@@ -42,7 +42,7 @@ def start_bot(startup_state):
     """Launch liquidation bot once upon every application startup."""
 
     list_troves = LQTY_bot.get_trove_list()
-    initialize_db(list_troves)
+    initialize_db(list_troves, coll_index=collateral)
 
     count = 0
     while True:
@@ -70,7 +70,7 @@ def add_new_trove(trove_operation_log: ContractLog, liquity) -> None:
     status = liquity.get_trove_status(trove_id)
 
     if status == "closedByLiquidation" or "closedByOwner":
-        eliminate_from_db(trove_id)
+        eliminate_from_db(trove_id, coll_index=liquity.coll_index)
         return
 
     trove = liquity.get_trove_details(trove_id)
@@ -79,4 +79,4 @@ def add_new_trove(trove_operation_log: ContractLog, liquity) -> None:
     if trove.check(liquity.coll_index):
         liquity.liquidate(trove.trove_id)
     else:
-        update_trove(trove)
+        update_trove(trove, coll_index=liquity.coll_index)

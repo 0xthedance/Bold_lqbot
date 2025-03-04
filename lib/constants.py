@@ -19,7 +19,7 @@ NETWORK_CONFIG = {
             "0xA351d5B9cDa9Eb518727c3CEFF02208915fda60d",
         ],
         "COLL_USD_PRICE_FEED": [
-            "0x3279e2B49ff60dAFb276FBAFF847383B67a7ec2d", 
+            "0x3279e2B49ff60dAFb276FBAFF847383B67a7ec2d",
             "0x4c275608887ad2eB049d9006E6852BC3ee8A00Fa",
             "0x93d3a2234e67C2aD494735cd6676fb4b79a6De97",
         ],

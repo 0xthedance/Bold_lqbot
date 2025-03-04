@@ -56,13 +56,13 @@ class LiquityMethods:
             self.trove_manager.batchLiquidateTroves(
                 trove_ids, sender=account, private=activate_flashbot
             )
-            eliminate_from_db(trove_ids)
+            eliminate_from_db(trove_ids, self.coll_index)
         except ContractLogicError as err:
             logger.error(
                 "It was not possible to liquidate the troves batch due the following error: %s",
                 err,
             )
-        except OutOfGasError:
+        except OutOfGasError as err:
             logger.critical(
                 "Out of gas. Exiting Liquidation : %s",
                 err,
@@ -103,7 +103,7 @@ class LiquityMethods:
                     trove.trove_id,
                     compensation,
                 )
-                eliminate_from_db(trove.trove_id)
+                eliminate_from_db(trove.trove_id, self.coll_index)
 
             except ContractLogicError as err:
                 logger.error(
@@ -111,7 +111,7 @@ class LiquityMethods:
                     err,
                 )
 
-            except OutOfGasError:
+            except OutOfGasError as err:
                 logger.critical(
                     "Out of gas. Exiting Liquidation : %s",
                     err,

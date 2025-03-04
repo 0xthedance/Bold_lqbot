@@ -3,8 +3,8 @@ import time
 from lib.trove import Trove
 
 
-def initialize_db(troves_list: list[Trove]):
-    conn = sqlite3.connect("troves.db")
+def initialize_db(troves_list: list[Trove], coll_index: int):
+    conn = sqlite3.connect(f"troves{coll_index}.db")
     cursor = conn.cursor()
     cursor.execute(
         """
@@ -20,7 +20,7 @@ def initialize_db(troves_list: list[Trove]):
             """
             INSERT OR REPLACE INTO troves (id, coll, debt) 
             VALUES (?, ?, ?);
-        """,
+            """,
             (str(trove.trove_id), str(trove.coll), str(trove.debt)),
         )
 
@@ -28,8 +28,8 @@ def initialize_db(troves_list: list[Trove]):
     conn.close()
 
 
-def fetch_troves() -> list[Trove]:
-    conn = sqlite3.connect("troves.db")
+def fetch_troves(coll_index: int) -> list[Trove]:
+    conn = sqlite3.connect(f"troves{coll_index}.db")
     cursor = conn.cursor()
 
     cursor.execute("SELECT id, coll, debt FROM troves WHERE debt!= ?", ("0",))
@@ -45,8 +45,8 @@ def fetch_troves() -> list[Trove]:
     return sorted_trove_list
 
 
-def update_trove(trove: Trove):
-    conn = sqlite3.connect("troves.db")
+def update_trove(trove: Trove, coll_index: int):
+    conn = sqlite3.connect(f"troves{coll_index}.db")
     cursor = conn.cursor()
     cursor.execute(
         """
@@ -59,9 +59,9 @@ def update_trove(trove: Trove):
     conn.close()
 
 
-def eliminate_from_db(trove_id):
+def eliminate_from_db(trove_id, coll_index: int):
+    conn = sqlite3.connect(f"troves{coll_index}.db")
 
-    conn = sqlite3.connect("troves.db")
     cursor = conn.cursor()
 
     cursor.execute("""DELETE FROM troves WHERE id = ?""", (str(trove_id),))
@@ -70,7 +70,7 @@ def eliminate_from_db(trove_id):
     conn.close()
 
 
-async def update_db(LQTY_bot):
+async def update_db(LQTY_bot, coll_index: int):
     """
     Update the troves database with the latest data from the LQTY bot.
 
@@ -87,7 +87,7 @@ async def update_db(LQTY_bot):
     sql = "UPDATE troves SET coll=?, debt=? WHERE id = ?"
 
     try:
-        with sqlite3.connect("troves.db") as conn:
+        with sqlite3.connect(f"troves{coll_index}.db") as conn:
             cur = conn.cursor()
             cur.executemany(sql, troves)
             conn.commit()

@@ -49,7 +49,7 @@ class LiquidationBot:
         selected = []
         for trove in trove_list:
             if not trove.check(self.liquity.coll_index):
-                logger.debug(trove.check(self.liquity.coll_index))  
+                logger.debug(trove.check(self.liquity.coll_index))
                 break
             selected.append(trove)
         logger.info("troves with CR below the minimum:%s", selected)
@@ -64,7 +64,6 @@ class LiquidationBot:
             * In recovery mode:
                 - using Stability Pool: 415K + n * 178K
                 - using redistribution: 391K        + n * 178K
-            
             `500K + n * 200K` should cover all cases (including starting in recovery mode and ending in
             normal mode) with some margin for safety.
         """
@@ -108,7 +107,7 @@ class LiquidationBot:
         """Launch the bot"""
         selected = []
         logger.info("starting the check")
-        list_troves = fetch_troves()
+        list_troves = fetch_troves(self.liquity.coll_index)
         logger.debug(" %s troves fetched from db", list_troves)
 
         selected = self.check_batch_troves(list_troves)
@@ -119,4 +118,4 @@ class LiquidationBot:
         else:
             selected.sort(key=lambda x: x.coll, reverse=True)
             for i in range(0, len(selected), MAX_TROVES_TO_LIQUIDATE):
-                self.liquidate_list_of_troves(selected[i : i + MAX_TROVES_TO_LIQUIDATE])
+                self.liquidate_list_of_troves(selected[i: i + MAX_TROVES_TO_LIQUIDATE])
